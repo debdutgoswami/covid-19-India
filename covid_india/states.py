@@ -1,8 +1,6 @@
 # imports
-import requests, json, os, datetime, itertools
+import requests, json, os, datetime, itertools, pandas as pd
 from requests import ConnectionError
-# beautifulsoup4
-from bs4 import BeautifulSoup
 
 # base url for the data
 _url = 'https://www.mohfw.gov.in/'
@@ -12,7 +10,7 @@ path = os.path.dirname(os.path.realpath(__file__))
 def getdata(state=None) -> dict:
 
     try:
-        req = requests.get(_url).content
+        req = requests.get(_url).text
         update_json(req)
         return is_offline(state)
     except ConnectionError:
@@ -29,42 +27,24 @@ def update_json(req):
         'Cured': 0,
         'Death': 0
     }
+    df = pd.read_html(req)
 
-    soup = BeautifulSoup(req, 'html.parser')
-    rows = soup.find_all('tr')
+    _, s, t, c, d = df[0]
 
-    for row in rows[1:len(rows)-1]:
-        col = row.find_all('td')
-
-        if len(col)!=5:
-            continue
-
-        state = col[1].text
-        # for graph
+    for i in range(36):
         try:
-            In, cur, dth = int(col[2].text.rstrip('# ')), int(col[3].text.rstrip('# ')), int(col[4].text.rstrip('# '))
-        except ValueError:
+            state, In, cur, dth = df[0][s][i].rstrip('# '), df[0][t][i].rstrip('# '), df[0][c][i].rstrip('# '), df[0][d][i].rstrip('# ')
+        except AttributeError:
             continue
 
-        # current data from the website
         _update.update({
             state: {
-                "Total": In,
-                "Cured": cur,
-                "Death": dth
+                "Total": int(In),
+                "Cured": int(cur),
+                "Death": int(dth)
             }
         })
-
-        _total['Total'] += In
-        _total['Cured'] += cur
-        _total['Death'] += dth
-
     _update.update({
-        "total": {
-            'In': _total['Total'],
-            'Cur': _total['Cured'],
-            'Dth': _total['Death']
-        },
         "lastupdated": _timestamp
     })
 
