@@ -46,6 +46,16 @@ pip3 install covid-india
 
     This returns a `json` object containing only the datas of West Bengal.
 
+3. Total Count
+
+    ```
+    from covid_india import states
+    print(states.getdata('Total'))
+    ```
+
+    This returns a `json` object containing only category wise count of all the cases in India.
+
+
 *If you use this package offline, you will get a timestamp along with the data stating when it was last updated.*
 
 # PyPi

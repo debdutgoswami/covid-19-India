@@ -23,25 +23,27 @@ def update_json(req):
 
     _update = dict()
     _total = {
-        'Total': 0,
-        'Cured': 0,
-        'Death': 0
+        'Total' : 0,
+        'Active': 0,
+        'Cured' : 0,
+        'Death' : 0
     }
     df = pd.read_html(req)
 
-    _, s, t, c, d = df[0]
+    _, s, a, c, d, t = df[0]
 
-    for i in range(36):
+    for i in range(37):
         try:
-            state, In, cur, dth = df[0][s][i].rstrip('# '), df[0][t][i].rstrip('# '), df[0][c][i].rstrip('# '), df[0][d][i].rstrip('# ')
+            state, act, cur, dth, tot = df[0][s][i].rstrip('# '), df[0][a][i].rstrip('# '), df[0][c][i].rstrip('# '), df[0][d][i].rstrip('# '), df[0][t][i].rstrip('# ')
         except AttributeError:
             continue
 
         _update.update({
             state: {
-                "Total": int(In),
-                "Cured": int(cur),
-                "Death": int(dth)
+                "Total" : int(tot),
+                "Active": int(act),
+                "Cured" : int(cur),
+                "Death" : int(dth)
             }
         })
     _update.update({
