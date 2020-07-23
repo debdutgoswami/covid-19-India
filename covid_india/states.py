@@ -16,7 +16,6 @@ def getdata(state=None) -> dict:
     except ConnectionError:
         return is_offline(state, offline=True)
 
-
 def update_json(req):
 
     _timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -32,7 +31,7 @@ def update_json(req):
 
     _, s, a, c, d, t = df[0]
 
-    for i in range(37):
+    for i in range(36):
         try:
             state, act, cur, dth, tot = df[0][s][i].rstrip('# '), df[0][a][i].rstrip('# '), df[0][c][i].rstrip('# '), df[0][d][i].rstrip('# '), df[0][t][i].rstrip('# ')
         except AttributeError:
@@ -46,6 +45,16 @@ def update_json(req):
                 "Death" : int(dth)
             }
         })
+
+        _total['Total'] += _update[state]['Total']
+        _total['Active'] += _update[state]['Active']
+        _total['Cured'] += _update[state]['Cured']
+        _total['Death'] += _update[state]['Death']
+
+    _update.update({
+        'Total': _total
+    })
+
     _update.update({
         "lastupdated": _timestamp
     })
