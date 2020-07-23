@@ -5,14 +5,14 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="covid_india",
-    version="1.1.1",
+    version="1.1.2",
     author="Debdut Goswami",
     author_email="debdutgoswami@gmail.com",
     description="A package to provide information regarding COVID-19 cases in India.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/debdutgoswami/covid-19-India",
-    download_url = 'https://github.com/debdutgoswami/covid-19-India/archive/v_1.1.1.tar.gz',
+    download_url = 'https://github.com/debdutgoswami/covid-19-India/archive/v_1.1.2.tar.gz',
     packages=setuptools.find_packages(),
     install_requires=[
         'requests',
