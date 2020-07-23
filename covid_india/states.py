@@ -50,7 +50,10 @@ def update_json(req):
         _total['Active'] += _update[state]['Active']
         _total['Cured'] += _update[state]['Cured']
         _total['Death'] += _update[state]['Death']
-
+    _total['Total'] = _total['Total']//2
+    _total['Active'] = _total['Active']//2
+    _total['Cured'] = _total['Cured']//2
+    _total['Death'] = _total['Death']//2
     _update.update({
         'Total': _total
     })
