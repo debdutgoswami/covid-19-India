@@ -1,16 +1,16 @@
 # imports
-import requests, json, os, datetime, itertools, pandas as pd
+import requests, json, os, datetime, itertools
 from requests import ConnectionError
 
 # base url for the data
-_url = 'https://www.mohfw.gov.in/'
+_url = 'https://www.mohfw.gov.in/data/datanew.json'
 # path to current file
 path = os.path.dirname(os.path.realpath(__file__))
 
 def getdata(state=None) -> dict:
 
     try:
-        req = requests.get(_url).text
+        req = requests.get(_url).json()
         update_json(req)
         return is_offline(state)
     except ConnectionError:
@@ -27,15 +27,12 @@ def update_json(req):
         'Cured' : 0,
         'Death' : 0
     }
-    df = pd.read_html(req)
 
-    _, s, a, c, d, t = df[0]
-
-    for i in range(36):
-        try:
-            state, act, cur, dth, tot = df[0][s][i].rstrip('# '), df[0][a][i].rstrip('# '), df[0][c][i].rstrip('# '), df[0][d][i].rstrip('# '), df[0][t][i].rstrip('# ')
-        except AttributeError:
-            continue
+    for i in req:
+        state, act, cur, dth, tot = i['state_name'], i['new_active'], \
+                                    i['new_cured'], i['new_death'], \
+                                    (i['new_active'] + i['new_cured'] +
+                                     i['new_death'])
 
         _update.update({
             state: {
@@ -67,7 +64,6 @@ def update_json(req):
 
 
 def is_offline(state, offline=False):
-
     with open(os.path.join(path,'stats.json'), 'r') as f:
         _json = json.load(f)
 
