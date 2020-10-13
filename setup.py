@@ -12,7 +12,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/debdutgoswami/covid-19-India",
-    download_url = 'https://github.com/debdutgoswami/covid-19-India/archive/v_1.1.3.tar.gz',
+    download_url = 'https://github.com/debdutgoswami/covid-19-India/archive/v_1.1.4.tar.gz',
     packages=setuptools.find_packages(),
     install_requires=[
         'requests',
