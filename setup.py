@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="covid_india",
-    version="1.1.3",
+    version="1.1.4",
     author="Debdut Goswami",
     author_email="debdutgoswami@gmail.com",
     description="A package to provide information regarding COVID-19 cases in India.",
