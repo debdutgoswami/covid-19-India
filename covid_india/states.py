@@ -1,5 +1,9 @@
 # imports
-import requests, json, os, datetime, itertools
+import requests
+import json
+import os
+import datetime
+import itertools
 from requests import ConnectionError
 
 # base url for the data
@@ -7,8 +11,8 @@ _url = 'https://www.mohfw.gov.in/data/datanew.json'
 # path to current file
 path = os.path.dirname(os.path.realpath(__file__))
 
-def getdata(state=None) -> dict:
 
+def getdata(state=None) -> dict:
     try:
         req = requests.get(_url).json()
         update_json(req)
@@ -16,16 +20,16 @@ def getdata(state=None) -> dict:
     except ConnectionError:
         return is_offline(state, offline=True)
 
-def update_json(req):
 
+def update_json(req):
     _timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     _update = dict()
     _total = {
-        'Total' : 0,
+        'Total': 0,
         'Active': 0,
-        'Cured' : 0,
-        'Death' : 0
+        'Cured': 0,
+        'Death': 0
     }
 
     for i in req:
@@ -36,10 +40,10 @@ def update_json(req):
 
         _update.update({
             state: {
-                "Total" : int(tot),
+                "Total": int(tot),
                 "Active": int(act),
-                "Cured" : int(cur),
-                "Death" : int(dth)
+                "Cured": int(cur),
+                "Death": int(dth)
             }
         })
 
@@ -59,12 +63,12 @@ def update_json(req):
         "lastupdated": _timestamp
     })
 
-    with open(os.path.join(path,'stats.json'), 'w') as f:
+    with open(os.path.join(path, 'stats.json'), 'w') as f:
         json.dump(_update, f)
 
 
 def is_offline(state, offline=False):
-    with open(os.path.join(path,'stats.json'), 'r') as f:
+    with open(os.path.join(path, 'stats.json'), 'r') as f:
         _json = json.load(f)
 
     if not state:
